@@ -1,0 +1,14 @@
+.utility-bar {
+  display: none;
+  background-color: #090402;
+}
+.utility-bar p {
+  color: #7C7C7C;
+  font-weight: normal;
+}
+.utility-bar .slider-button:not([disabled]) {
+  color: #7C7C7C;
+}
+.utility-bar .slider-button:not([disabled]):hover {
+  color: #7C7C7C;
+}
