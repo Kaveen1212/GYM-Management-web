@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PROGRAMS } from "@/lib/programs";
 import { Reveal } from "@/components/motion/Reveal";
@@ -27,10 +28,17 @@ export default function ProgramsPage() {
               data-cursor="Details"
               className="group relative flex h-full flex-col justify-between overflow-hidden rounded-panel border border-border bg-surface p-7 transition-colors hover:border-white/20"
             >
+              <Image
+                src={p.image}
+                alt=""
+                fill
+                sizes="(min-width: 640px) 50vw, 100vw"
+                className="object-cover opacity-30 transition-opacity duration-500 ease-expo group-hover:opacity-45"
+              />
               <div
-                className="pointer-events-none absolute inset-0 opacity-60 transition-opacity group-hover:opacity-100"
+                className="pointer-events-none absolute inset-0 opacity-90"
                 style={{
-                  background: `radial-gradient(90% 70% at 100% 0%, rgb(${p.tint} / 0.16), transparent 55%)`,
+                  background: `linear-gradient(180deg, rgb(var(--surface)) 10%, transparent 50%, rgb(var(--surface)) 100%), radial-gradient(90% 70% at 100% 0%, rgb(${p.tint} / 0.18), transparent 55%)`,
                 }}
               />
               <div className="relative">

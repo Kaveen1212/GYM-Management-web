@@ -6,11 +6,12 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import { usePrefersReducedMotion } from "@/lib/hooks/useReducedMotion";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * <TextScrollStatement/> — Nivis's `index_text_scroll` section, rebuilt for Apex.
+ * <TextScrollStatement/> — Nivis's `index_text_scroll` section, rebuilt for K_RIPSTER.
  * A large centered statement that reveals word-by-word as it scrolls through the
  * viewport (GSAP scrub), with tiny inline looping video chips mid-sentence — the
  * exact pattern from the reference. Reduced motion shows it fully lit.
@@ -19,7 +20,7 @@ gsap.registerPlugin(ScrollTrigger);
 type Part = { type: "text"; value: string } | { type: "video" };
 
 const STATEMENT: Part[] = [
-  { type: "text", value: "Apex is a" },
+  { type: "text", value: "K_RIPSTER is a" },
   { type: "video" },
   {
     type: "text",
@@ -38,7 +39,7 @@ function VideoChip() {
   return (
     <span className="mx-1.5 inline-block translate-y-[2px] align-middle">
       <video
-        className="h-[38px] w-[56px] rounded-[3px] object-cover sm:h-[60px] sm:w-[88px]"
+        className="h-[38px] w-[56px] rounded-md object-cover sm:h-[60px] sm:w-[88px]"
         autoPlay
         muted
         loop
@@ -75,12 +76,19 @@ export function TextScrollStatement() {
     return () => ctx.revert();
   }, [reduced]);
 
-  // Build the word/video stream. Each word is an animatable span.
+  // Build the word/video stream. Each word is an animatable span; the brand
+  // name gets a solid lime highlight, like marker-selected text.
   let key = 0;
   const nodes = STATEMENT.flatMap((part) => {
     if (part.type === "video") return [<VideoChip key={`v${key++}`} />];
     return part.value.split(" ").map((w) => (
-      <span key={`w${key++}`} className="tsw">
+      <span
+        key={`w${key++}`}
+        className={cn(
+          "tsw",
+          w === "K_RIPSTER" && " bg-accent px-1.5 text-accent-ink"
+        )}
+      >
         {w}{" "}
       </span>
     ));
@@ -97,7 +105,7 @@ export function TextScrollStatement() {
           {nodes}
         </p>
         <Link
-          href="/coach-profile"
+          href="/#coach"
           data-cursor="The coach"
           className="group mt-12 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-accent"
         >

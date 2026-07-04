@@ -6,7 +6,7 @@ import { Reveal } from "@/components/motion/Reveal";
 
 /**
  * <NewsletterCTA/> — Nivis's `newsletter_footer` email-capture band, rebuilt for
- * Apex. Heading + email field + SUBSCRIBE + consent line. Mock submit (no
+ * K_RIPSTER. Heading + email field + SUBSCRIBE + consent line. Mock submit (no
  * backend yet) with an optimistic confirmation.
  */
 export function NewsletterCTA() {
@@ -53,7 +53,7 @@ export function NewsletterCTA() {
                 <button
                   type="submit"
                   data-cursor="Subscribe"
-                  className="group inline-flex h-13 shrink-0 items-center justify-center gap-2 rounded-input bg-accent px-6 font-mono text-xs font-medium uppercase tracking-wider text-accent-ink transition-colors hover:bg-accent-press"
+                  className="group inline-flex h-13 shrink-0 items-center justify-center gap-2 rounded-input bg-accent px-6 font-pixel text-xs font-medium uppercase tracking-wider text-accent-ink transition-colors hover:bg-accent-press"
                 >
                   Subscribe
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-expo group-hover:translate-x-1" />
@@ -61,7 +61,7 @@ export function NewsletterCTA() {
               </form>
             )}
             <p className="mt-3 text-xs text-faint">
-              By signing up, you agree to receive the Apex newsletter. No spam —
+              By signing up, you agree to receive the K_RIPSTER newsletter. No spam —
               unsubscribe anytime.
             </p>
           </div>

@@ -6,7 +6,7 @@ import { Reveal } from "@/components/motion/Reveal";
 
 /**
  * <ProcessPerks/> — Nivis's `index_faq` section ("OUR DEVELOPMENT PROCESS" +
- * Free Shipping / Returns / Custom Patches), rebuilt for Apex. A narrow centered
+ * Free Shipping / Returns / Custom Patches), rebuilt for K_RIPSTER. A narrow centered
  * column over a faint backdrop: eyebrow + heading, an intro/process blurb with a
  * CTA, then three icon-led blocks separated by hairlines.
  */
@@ -38,7 +38,7 @@ export function ProcessPerks() {
 
       <div className="relative w-full max-w-[47.375rem]">
         <Reveal>
-          <p className="eyebrow mb-5 text-accent">Apex coaching</p>
+          <p className="eyebrow mb-5 text-accent">K_RIPSTER coaching</p>
           <h2 className="font-display text-display-sm">How the coaching works.</h2>
         </Reveal>
 
@@ -50,7 +50,7 @@ export function ProcessPerks() {
             and structure to get the most out of every single session.
           </p>
           <Link
-            href="/coach-profile"
+            href="/#coach"
             data-cursor="The coach"
             className="group mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ink transition-colors hover:text-accent"
           >

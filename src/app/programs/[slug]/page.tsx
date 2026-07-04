@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowUpRight, Check } from "lucide-react";
 import { PROGRAMS } from "@/lib/programs";
@@ -52,6 +53,24 @@ export default function ProgramDetailPage({
               {program.name}
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted">{program.tagline}</p>
+          </Reveal>
+
+          <Reveal className="relative mt-10 h-[46vh] max-h-[520px] w-full overflow-hidden rounded-panel border border-border">
+            <Image
+              src={program.image}
+              alt={program.name}
+              fill
+              sizes="(min-width: 1024px) 1100px, 100vw"
+              className="object-cover"
+              priority
+            />
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: `linear-gradient(180deg, rgb(${program.tint} / 0.18), transparent 40%, rgba(8,9,10,0.65) 100%)`,
+              }}
+            />
+            <div className="grain pointer-events-none absolute inset-0 opacity-40" />
           </Reveal>
 
           <div className="mt-14 grid gap-px overflow-hidden rounded-panel border border-border sm:grid-cols-3">
@@ -109,7 +128,7 @@ export default function ProgramDetailPage({
           <Link
             href="/onboarding"
             data-cursor="Apply"
-            className="inline-flex h-12 shrink-0 items-center gap-2 rounded-lg bg-accent px-6 font-mono text-xs font-medium uppercase tracking-wider text-accent-ink transition-colors hover:bg-accent-press"
+            className="inline-flex h-12 shrink-0 items-center gap-2 rounded-md bg-accent px-6 font-pixel text-xs font-medium uppercase tracking-wider text-accent-ink transition-colors hover:bg-accent-press"
           >
             Get coached
             <ArrowUpRight className="h-4 w-4" />

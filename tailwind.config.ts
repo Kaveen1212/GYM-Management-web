@@ -41,6 +41,8 @@ const config: Config = {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "var(--font-sans)", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        // chunky low-res "pixel" face — eyebrows + CTA button text
+        pixel: ["var(--font-pixel)", "var(--font-mono)", "monospace"],
       },
       fontSize: {
         // fluid display sizes per the brief (up to clamp(3rem, 8vw, 8rem))
@@ -53,9 +55,10 @@ const config: Config = {
         tightest: "-0.04em",
       },
       borderRadius: {
-        input: "10px",
-        card: "14px",
-        panel: "16px",
+        // unified site-wide corner radius — matches Tailwind's `md` (6px)
+        input: "0.375rem",
+        card: "0.375rem",
+        panel: "0.375rem",
         pill: "9999px",
       },
       spacing: {
