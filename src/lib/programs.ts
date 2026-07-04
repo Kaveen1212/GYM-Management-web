@@ -20,6 +20,8 @@ export type Program = {
   icon: LucideIcon;
   /** RGB channel triplet ("70 110 150") used for the per-card glow + media wash. */
   tint: string;
+  /** Real coach photo shown in the card's media panel — /public/programs/*.png */
+  image: string;
 };
 
 export const PROGRAMS: Program[] = [
@@ -36,6 +38,7 @@ export const PROGRAMS: Program[] = [
     focus: ["Squat", "Bench", "Deadlift", "Technique"],
     icon: Dumbbell,
     tint: "86 132 178",
+    image: "/programs/strength-foundations.png",
   },
   {
     slug: "physique-hypertrophy",
@@ -50,6 +53,7 @@ export const PROGRAMS: Program[] = [
     focus: ["Volume", "Nutrition", "Symmetry"],
     icon: Flame,
     tint: "204 140 64",
+    image: "/programs/physique-hypertrophy.png",
   },
   {
     slug: "competition-prep",
@@ -64,6 +68,7 @@ export const PROGRAMS: Program[] = [
     focus: ["Peak week", "Posing", "Conditioning"],
     icon: Trophy,
     tint: "214 84 74",
+    image: "/programs/competition-prep.png",
   },
   {
     slug: "online-remote-coaching",
@@ -78,5 +83,6 @@ export const PROGRAMS: Program[] = [
     focus: ["Remote", "Video review", "24/7 chat"],
     icon: Wifi,
     tint: "74 184 150",
+    image: "/programs/online-remote-coaching.png",
   },
 ];

@@ -5,7 +5,7 @@ import { Dumbbell, LineChart, PlayCircle, ArrowUpRight } from "lucide-react";
 import { Reveal, RevealItem } from "@/components/motion/Reveal";
 
 /**
- * <DiscoverFeatures/> — Nivis's `discover-features` section, rebuilt for Apex.
+ * <DiscoverFeatures/> — Nivis's `discover-features` section, rebuilt for K_RIPSTER.
  * Nivis: a heading + a `grid md:grid-cols-3` of interactive feature boxes
  * (swiper on mobile). Here: the three core product surfaces, each a hover-lift
  * card with a tinted visual, big icon, title and copy.

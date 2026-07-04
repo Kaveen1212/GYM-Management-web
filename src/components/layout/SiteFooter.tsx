@@ -10,7 +10,7 @@ const FOOTER_NAV = [
     title: "Platform",
     links: [
       { href: "/programs", label: "Programs" },
-      { href: "/coach-profile", label: "The Coach" },
+      { href: "/#coach", label: "The Coach" },
       { href: "/#reviews", label: "Reviews" },
       { href: "/onboarding", label: "Get Coached" },
     ],
@@ -26,9 +26,9 @@ const FOOTER_NAV = [
   {
     title: "Contact",
     links: [
+      { href: "https://wa.me/94770227550", label: "WhatsApp — 077 022 7550" },
       { href: "#", label: "Instagram" },
-      { href: "#", label: "hello@apex.fit" },
-      { href: "#", label: "Press kit" },
+      { href: "#", label: "hello@kripster.fit" },
     ],
   },
 ];
@@ -46,10 +46,21 @@ export function SiteFooter() {
             </h2>
           </div>
           <div className="flex shrink-0 gap-3">
-            <Button href="/onboarding" size="lg" data-cursor="Apply">
+            <Button
+              href="/onboarding"
+              size="lg"
+              data-cursor="Apply"
+              className="font-pixel uppercase tracking-wider"
+            >
               Get coached
             </Button>
-            <Button href="/programs" size="lg" variant="secondary" data-cursor="Browse">
+            <Button
+              href="/programs"
+              size="lg"
+              variant="secondary"
+              data-cursor="Browse"
+              className="font-pixel uppercase tracking-wider"
+            >
               View programs
             </Button>
           </div>
@@ -60,12 +71,12 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-8xl grid-cols-2 gap-8 px-6 pb-20 sm:grid-cols-3 md:grid-cols-4 lg:px-10">
         <div className="col-span-2 sm:col-span-3 md:col-span-1">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-7 w-7 place-items-center rounded-[7px] bg-accent text-accent-ink">
+            <span className="grid h-7 w-7 place-items-center rounded-md bg-accent text-accent-ink">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
                 <path d="M12 3L3 20h18L12 3z" fill="currentColor" />
               </svg>
             </span>
-            <span className="font-display text-lg tracking-tightest">APEX</span>
+            <span className="font-display text-lg tracking-tightest">K_RIPSTER</span>
           </div>
           <p className="mt-4 max-w-xs text-sm text-muted">
             Premium 1:1 strength &amp; physique coaching. Built for people who
@@ -105,13 +116,13 @@ export function SiteFooter() {
 
       {/* Giant wordmark */}
       <div className="relative select-none px-2" aria-hidden>
-        <div className="pointer-events-none bg-gradient-to-b from-ink/10 to-ink/[0.02] bg-clip-text text-center font-display leading-[0.8] text-transparent">
-          <span className="block text-[24vw] font-bold tracking-tightest">APEX</span>
+        <div className="pointer-events-none bg-gradient-to-b from-ink/10 to-ink/[0.02] bg-clip-text pb-[2vw] text-center font-display leading-[1] text-transparent">
+          <span className="block text-[11vw] font-bold tracking-tightest">K_RIPSTER</span>
         </div>
       </div>
 
       <div className="mx-auto flex max-w-8xl flex-col items-center justify-between gap-3 border-t border-border px-6 py-6 text-xs text-faint sm:flex-row lg:px-10">
-        <p>© {2026} Apex Performance. All rights reserved.</p>
+        <p>© {2026} K_RIPSTER Performance. All rights reserved.</p>
         <p className="eyebrow">Train with intent</p>
       </div>
     </footer>

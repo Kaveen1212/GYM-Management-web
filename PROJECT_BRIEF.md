@@ -13,7 +13,8 @@ You have two kinds of design reference. **Study both before writing any code.**
    - We are **NOT** building a store. We are stealing its *visual language and motion design* and applying it to a fitness coaching platform.
 
 2. **Motion reference GIFs** (in the `/references` folder — open and study each):
-   - `01-hero-reveal.gif` → the **hero**: full-bleed looping video background, dark gradient, a glass info-card sliding up, huge type, a neon-lime CTA pill, a custom neon cursor, a "SCROLL TO EXPLORE" cue.
+   - `01-hero-reveal.gif` → the **hero**: full-bleed 
+   . video background, dark gradient, a glass info-card sliding up, huge type, a neon-lime CTA pill, a custom neon cursor, a "SCROLL TO EXPLORE" cue.
    - `02-scroll-stacking-cards.gif` → **the signature animation**: a pinned scroll section where full-width cards stack and swap vertically as you scroll. Each card = giant headline (left) · large image with parallax (center) · detail panel (right) · a small thumbnail rail top-right.
    - `03-product-customizer-modal.gif` → a **full-screen modal**: grid of cards, a "filter by category" dropdown, a search field, hover-lift on cards. We reuse this pattern for the **exercise picker / program builder**.
    - `04-reviews-typography.gif` → **oversized-quote testimonials**: massive pull-quotes, neon star ratings, "VERIFIED" badges, two-column scroll-reveal. We reuse this for the **coach's client reviews**.

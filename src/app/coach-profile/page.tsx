@@ -1,14 +1,7 @@
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Coach profile" };
-
+// This site is the coach's portfolio — his qualifications, services and
+// contact now live directly on the home page (see <CoachPortfolio/>).
 export default function CoachProfilePage() {
-  return (
-    <ComingSoon
-      eyebrow="The coach"
-      title="Wins, builds & philosophy."
-      body="The full portfolio — competition timeline, client transformations, reviews and bio — is part of the public-site phase."
-      phase="Phase 1"
-    />
-  );
+  redirect("/#coach");
 }

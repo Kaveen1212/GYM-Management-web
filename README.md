@@ -1,4 +1,4 @@
-# Apex — Coaching & Gym-Management Platform
+# K_RIPSTER — Coaching & Gym-Management Platform
 
 A premium, cinematic coaching platform a personal trainer gives to their
 clients. Three connected surfaces: a public marketing site + coach portfolio, a

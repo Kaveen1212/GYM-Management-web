@@ -2,12 +2,11 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { PROGRAMS, type Program } from "@/lib/programs";
-import { cn } from "@/lib/utils";
-import { useLenis } from "@/components/motion/SmoothScroll";
 import { usePrefersReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -17,41 +16,38 @@ const COUNT = PROGRAMS.length;
 
 /**
  * <StackingShowcase/> — the signature pinned scroll-stacking section (GIF 2).
- * On desktop the section pins (the screen stays fixed) and each program card
- * slides up over the previous one as you scroll, card by card; the outgoing
- * card scales back + dims, the incoming media parallaxes in. A persistent
- * control bar (active label · progress dots · clickable thumbnail rail) tracks
- * and drives the active index. On touch / small / reduced-motion it gracefully
- * degrades to a clean vertical list.
+ * The section pins (the screen stays fixed) and each program card flies up
+ * and off as you scroll, card by card, while the next one emerges from the
+ * deck behind it — on every screen size, mobile included. The card's internal
+ * layout stacks (headline / media / detail) on narrow screens and switches to
+ * 3 columns at the `lg` breakpoint. Only reduced-motion users get a plain
+ * vertical list instead.
  */
 export function StackingShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const [mode, setMode] = useState<"stack" | "list">("list");
   const reduced = usePrefersReducedMotion();
-  const { scrollTo } = useLenis();
 
-  // Pinned stacking is a desktop + motion-OK enhancement; otherwise a list.
-  useLayoutEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const decide = () => setMode(mq.matches && !reduced ? "stack" : "list");
-    decide();
-    mq.addEventListener("change", decide);
-    return () => mq.removeEventListener("change", decide);
-  }, [reduced]);
+  // Pinned stacking runs on every screen size — only reduced-motion users get
+  // the plain list fallback.
+  const mode: "stack" | "list" = reduced ? "list" : "stack";
 
   useLayoutEffect(() => {
     if (mode !== "stack" || !sectionRef.current) return;
 
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>(".stack-card");
+      const stageHeight = stageRef.current?.clientHeight || window.innerHeight;
 
-      // Card 0 sits in place; the rest wait just off the bottom edge.
+      // All cards already sit on screen, centered, fanned into a shallow deck:
+      // card 0 up front at full size, the rest waiting just behind — slightly
+      // smaller and nudged down — instead of parked off-screen below.
       cards.forEach((card, i) => {
         gsap.set(card, {
-          yPercent: i === 0 ? 0 : 100,
-          transformOrigin: "50% 0%",
+          scale: i === 0 ? 1 : 0.98 - (i - 1) * 0.02,
+          y: i === 0 ? 0 : 12 * i,
+          transformOrigin: "50% 50%",
         });
       });
 
@@ -67,24 +63,25 @@ export function StackingShowcase() {
         },
       });
 
-      for (let i = 1; i < COUNT; i++) {
+      for (let i = 0; i < COUNT - 1; i++) {
         const label = `seg${i}`;
-        const prev = cards[i - 1];
-        const cur = cards[i];
-        const curImg = cur.querySelector<HTMLElement>(".stack-img");
         tl.addLabel(label);
-        // outgoing card recedes
-        tl.to(prev, { scale: 0.92, filter: "brightness(0.4)" }, label);
-        // incoming card slides up to cover it
-        tl.fromTo(cur, { yPercent: 100 }, { yPercent: 0 }, label);
-        // incoming media parallaxes in
-        if (curImg)
-          tl.fromTo(
-            curImg,
-            { yPercent: 16, scale: 1.14 },
-            { yPercent: 0, scale: 1 },
-            label
+        // current front card is sent up and off the top of the screen
+        tl.to(cards[i], { y: -stageHeight }, label);
+        // the next card in the deck emerges — scales up to fill the front
+        tl.to(cards[i + 1], { scale: 1, y: 0, duration: 0.5 }, `${label}+=0.25`);
+        // remaining background cards shuffle one position closer to the front
+        for (let j = i + 2; j < COUNT; j++) {
+          tl.to(
+            cards[j],
+            {
+              scale: 0.98 - (j - i - 2) * 0.02,
+              y: 12 * (j - i - 1),
+              duration: 0.5,
+            },
+            `${label}+=0.25`
           );
+        }
       }
     }, sectionRef);
 
@@ -92,17 +89,6 @@ export function StackingShowcase() {
     return () => ctx.revert();
   }, [mode]);
 
-  const goTo = (i: number) => {
-    const sec = sectionRef.current;
-    if (!sec) return;
-    const top = window.scrollY + sec.getBoundingClientRect().top;
-    const range = sec.offsetHeight - window.innerHeight;
-    const target = top + (range * i) / (COUNT - 1);
-    if (scrollTo) scrollTo(target, { duration: 1.1 });
-    else window.scrollTo({ top: target, behavior: "smooth" });
-  };
-
-  /* ----------------------------- LIST FALLBACK ----------------------------- */
   if (mode === "list") {
     return (
       <section id="programs" className="bg-[#0a0c0e] py-20 sm:py-28">
@@ -145,18 +131,21 @@ export function StackingShowcase() {
         />
         <div className="absolute inset-0 z-0 bg-[radial-gradient(125%_100%_at_50%_50%,transparent_35%,rgba(0,0,0,0.7))]" />
 
-        {/* stacked cards */}
+        {/* stacked cards — all present on screen from the start, fanned into a
+            shallow deck; the front card (highest z-index) flies up and off on
+            scroll, the next one (already waiting behind) scales up to replace it */}
         {PROGRAMS.map((p, i) => (
           <div
             key={p.slug}
-            className="stack-card absolute inset-0 z-10 flex items-center justify-center px-[clamp(16px,4vw,56px)] pb-[clamp(20px,4vh,40px)] pt-[clamp(76px,12vh,128px)]"
-            style={{ zIndex: 10 + i }}
+            className="absolute inset-0 z-10 flex items-center justify-center px-[clamp(12px,4vw,56px)] pb-[clamp(12px,3vh,40px)] pt-[clamp(64px,11vh,128px)]"
+            style={{ zIndex: 10 + (COUNT - i) }}
           >
-            <div className="relative h-[clamp(500px,72vh,700px)] w-full max-w-[1180px] overflow-hidden rounded-panel border border-border bg-surface shadow-raised">
-              <div className="grid h-full grid-cols-[1.05fr_1.3fr_0.95fr]">
+            <div className="stack-card relative h-[clamp(460px,82svh,700px)] w-full max-w-[1480px] overflow-hidden rounded-panel border border-border bg-surface shadow-raised">
+              {/* mobile: stacked rows (headline / media / detail) — desktop: 3 columns */}
+              <div className="grid h-full grid-rows-[auto_minmax(160px,1fr)_auto] lg:grid-rows-none lg:grid-cols-[0.85fr_1.75fr_0.8fr]">
                 {/* headline */}
-                <div className="flex flex-col justify-end p-[clamp(28px,3vw,48px)] pb-[clamp(80px,9vh,96px)]">
-                  <h3 className="font-display text-[clamp(2.2rem,3.6vw,4.6rem)] leading-[0.92] tracking-tightest">
+                <div className="flex flex-col justify-end p-5 pb-3 lg:p-[clamp(28px,3vw,48px)] lg:pb-[clamp(80px,9vh,96px)]">
+                  <h3 className="font-display text-[clamp(1.7rem,3.6vw,4.6rem)] leading-[0.96] tracking-tightest lg:leading-[0.92]">
                     {p.headline.map((line) => (
                       <span key={line} className="block">
                         {line}
@@ -166,40 +155,52 @@ export function StackingShowcase() {
                 </div>
 
                 {/* media (parallax) */}
-                <div className="relative overflow-hidden border-x border-border bg-[#0c0e10]">
-                  <div
-                    className="stack-img absolute inset-0"
-                    style={{
-                      background: `radial-gradient(120% 90% at 50% 0%, rgb(${p.tint} / 0.30), transparent 60%), linear-gradient(180deg, #14171b, #0a0c0e)`,
-                    }}
-                  >
-                    <div className="grain absolute inset-0 opacity-60" />
-                    <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[26vh] leading-none text-white/[0.05]">
+                <div className="relative overflow-hidden border-y border-border bg-[#0c0e10] lg:border-x lg:border-y-0">
+                  <div className="stack-img absolute inset-0">
+                    <Image
+                      src={p.image}
+                      alt={p.name}
+                      fill
+                      sizes="(min-width: 1024px) 55vw, 100vw"
+                      className="object-cover"
+                      priority={i === 0}
+                    />
+                    {/* tint wash + dark gradient — keeps every photo reading as one campaign */}
+                    <div
+                      className="pointer-events-none absolute inset-0"
+                      style={{
+                        background: `linear-gradient(180deg, rgb(${p.tint} / 0.22), transparent 45%, rgba(10,12,14,0.55) 100%)`,
+                      }}
+                    />
+                    <div className="grain pointer-events-none absolute inset-0 opacity-40" />
+                    <span className="pointer-events-none absolute left-4 top-4 font-display text-sm leading-none text-white/40">
                       {p.index}
                     </span>
-                    <p.icon
-                      className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2"
-                      style={{ color: `rgb(${p.tint})` }}
-                      strokeWidth={1.25}
-                    />
                   </div>
                 </div>
 
                 {/* detail panel */}
-                <div className="flex flex-col justify-between p-[clamp(28px,2.4vw,40px)] pb-[clamp(80px,9vh,96px)]">
+                <div className="flex flex-col justify-between overflow-hidden p-5 pt-3 lg:p-[clamp(28px,2.4vw,40px)] lg:pb-[clamp(80px,9vh,96px)]">
                   <div>
-                    <h4 className="font-display text-2xl tracking-tight">
+                    <h4 className="font-display text-lg tracking-tight lg:text-2xl">
                       {p.name}
                     </h4>
-                    <p className="mt-4 text-sm leading-relaxed text-muted">
+                    <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted lg:mt-4 lg:line-clamp-none">
                       {p.tagline}
                     </p>
-                    <dl className="mt-6 space-y-2.5 border-t border-border pt-5 text-sm">
+
+                    {/* compact single-line meta on mobile */}
+                    <p className="mt-3 border-t border-border pt-3 font-mono text-[11px] uppercase tracking-wider text-faint lg:hidden">
+                      {p.duration} · {p.level} · {p.price}
+                    </p>
+
+                    {/* full meta + focus chips on desktop */}
+                    <dl className="mt-6 hidden space-y-2.5 border-t border-border pt-5 text-sm lg:block">
                       <MetaRow label="Duration" value={p.duration} />
                       <MetaRow label="Level" value={p.level} />
                       <MetaRow label="Investment" value={p.price} />
                     </dl>
-                    <div className="mt-5 flex flex-wrap gap-2">
+                    <div className="mt-5 hidden flex-wrap gap-2 lg:flex">
                       {p.focus.map((f) => (
                         <span
                           key={f}
@@ -211,11 +212,11 @@ export function StackingShowcase() {
                     </div>
                   </div>
 
-                  <div className="mt-6 flex items-center gap-3">
+                  <div className="mt-4 flex items-center gap-3 lg:mt-6">
                     <Link
                       href="/onboarding"
                       data-cursor="Apply"
-                      className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-accent px-4 font-mono text-xs font-medium uppercase tracking-wider text-accent-ink transition-colors hover:bg-accent-press"
+                      className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-md bg-accent px-4 font-pixel text-xs font-medium uppercase tracking-wider text-accent-ink transition-colors hover:bg-accent-press"
                     >
                       Get coached
                       <ArrowUpRight className="h-4 w-4" />
@@ -223,7 +224,7 @@ export function StackingShowcase() {
                     <Link
                       href={`/programs/${p.slug}`}
                       data-cursor="Details"
-                      className="inline-flex h-11 items-center justify-center rounded-lg border border-border px-4 font-mono text-xs font-medium uppercase tracking-wider text-ink transition-colors hover:border-accent hover:text-accent"
+                      className="inline-flex h-11 items-center justify-center rounded-md border border-border px-4 font-pixel text-xs font-medium uppercase tracking-wider text-ink transition-colors hover:border-accent hover:text-accent"
                     >
                       Learn more
                     </Link>
@@ -233,52 +234,6 @@ export function StackingShowcase() {
             </div>
           </div>
         ))}
-
-        {/* persistent control bar — aligned to the card box: label · dots · rail */}
-        <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-[clamp(16px,4vw,56px)] pb-[clamp(20px,4vh,40px)] pt-[clamp(76px,12vh,128px)]">
-          <div className="relative h-[clamp(500px,72vh,700px)] w-full max-w-[1180px]">
-            <div className="absolute inset-x-0 bottom-0 flex h-[clamp(60px,8vh,84px)] items-center justify-between gap-6 border-t border-border px-[clamp(24px,2.4vw,40px)]">
-            <span className="eyebrow hidden truncate text-faint sm:block">
-              {PROGRAMS[active].index} / 0{COUNT} — {PROGRAMS[active].name}
-            </span>
-
-            <div className="flex items-center gap-1.5">
-              {PROGRAMS.map((p, i) => (
-                <span
-                  key={p.slug}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all duration-500 ease-expo",
-                    i === active ? "w-8 bg-accent" : "w-1.5 bg-white/25"
-                  )}
-                />
-              ))}
-            </div>
-
-            <div className="pointer-events-auto flex items-center gap-2">
-              {PROGRAMS.map((p, i) => (
-                <button
-                  key={p.slug}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-label={`Go to ${p.name}`}
-                  data-cursor={p.name}
-                  className={cn(
-                    "relative grid h-11 w-11 place-items-center overflow-hidden rounded-md border transition-all duration-300 ease-expo",
-                    i === active
-                      ? "border-accent ring-1 ring-accent"
-                      : "border-border opacity-60 hover:opacity-100"
-                  )}
-                  style={{
-                    background: `radial-gradient(120% 100% at 50% 0%, rgb(${p.tint} / 0.45), #0c0e10 70%)`,
-                  }}
-                >
-                  <p.icon className="h-4 w-4 text-white/85" strokeWidth={1.5} />
-                </button>
-              ))}
-            </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -293,13 +248,13 @@ function MetaRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Compact horizontal card used by the mobile / reduced-motion list fallback. */
+/** Compact horizontal card used by the reduced-motion list fallback. */
 function ProgramCardListItem({ program: p }: { program: Program }) {
   return (
     <Link
       href={`/programs/${p.slug}`}
       data-cursor="Details"
-      className="group grid grid-cols-1 overflow-hidden rounded-panel border border-border bg-surface transition-colors hover:border-white/20 sm:grid-cols-[1fr_1.1fr]"
+      className="group grid grid-cols-1 overflow-hidden rounded-md border border-border bg-surface transition-colors hover:border-white/20 sm:grid-cols-[1fr_1.1fr]"
     >
       <div
         className="relative h-44 overflow-hidden sm:h-auto"

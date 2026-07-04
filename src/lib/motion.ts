@@ -1,6 +1,6 @@
 import type { Variants, Transition } from "framer-motion";
 
-/** Signature expo-out easing — the default across the Apex motion system. */
+/** Signature expo-out easing — the default across the K_RIPSTER motion system. */
 export const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
 export const DURATION = {

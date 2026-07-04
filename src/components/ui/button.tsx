@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Magnetic } from "@/components/motion/Magnetic";
 
 const buttonVariants = cva(
-  "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-xl font-medium transition-colors duration-300 ease-expo focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-md font-medium transition-colors duration-300 ease-expo focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
