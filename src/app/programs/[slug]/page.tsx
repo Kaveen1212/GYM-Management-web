@@ -31,7 +31,7 @@ export default function ProgramDetailPage({
             background: `radial-gradient(70% 60% at 50% 0%, rgb(${program.tint} / 0.18), transparent 65%)`,
           }}
         />
-        <div className="relative mx-auto max-w-8xl px-6 lg:px-10">
+        <div className="relative mx-auto max-w-9xl px-5 sm:px-8 lg:px-0">
           <Link
             href="/programs"
             data-cursor="Back"
@@ -116,7 +116,7 @@ export default function ProgramDetailPage({
 
       {/* sticky action bar (like the reference purchase bar) */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-bg/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-8xl items-center justify-between gap-4 px-6 py-4 lg:px-10">
+        <div className="mx-auto flex max-w-9xl items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:px-0">
           <div className="min-w-0">
             <p className="truncate font-display text-lg leading-tight">
               {program.name}

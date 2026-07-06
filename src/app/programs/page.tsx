@@ -8,7 +8,7 @@ export const metadata = { title: "Programs" };
 
 export default function ProgramsPage() {
   return (
-    <main className="mx-auto max-w-8xl px-6 pb-28 pt-32 sm:pt-40 lg:px-10">
+    <main className="mx-auto max-w-9xl px-5 pb-28 pt-32 sm:px-8 sm:pt-40 lg:px-0">
       <Reveal className="max-w-3xl">
         <p className="eyebrow mb-5 text-accent">Coaching programs</p>
         <h1 className="font-display text-display-sm">

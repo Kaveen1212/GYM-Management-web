@@ -35,7 +35,7 @@ const FEATURES = [
 export function DiscoverFeatures() {
   return (
     <section className="bg-bg py-24 sm:py-32">
-      <div className="mx-auto max-w-8xl px-6 lg:px-10">
+      <div className="mx-auto max-w-9xl px-5 sm:px-8 lg:px-0">
         <Reveal className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
             <p className="eyebrow mb-4 text-accent">Inside the app</p>

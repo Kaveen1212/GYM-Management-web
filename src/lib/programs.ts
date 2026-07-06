@@ -22,6 +22,12 @@ export type Program = {
   tint: string;
   /** Real coach photo shown in the card's media panel — /public/programs/*.png */
   image: string;
+  /**
+   * Optional square (1:1) crop for narrow screens — the stacking card's media
+   * panel is near-square on phones but a wide letterbox on desktop, so a single
+   * image can't frame well at both. Falls back to `image` when not set.
+   */
+  imageMobile?: string;
 };
 
 export const PROGRAMS: Program[] = [
@@ -39,6 +45,7 @@ export const PROGRAMS: Program[] = [
     icon: Dumbbell,
     tint: "86 132 178",
     image: "/programs/strength-foundations.png",
+    imageMobile: "/programs/strength-foundations-mobile.png",
   },
   {
     slug: "physique-hypertrophy",
@@ -54,6 +61,7 @@ export const PROGRAMS: Program[] = [
     icon: Flame,
     tint: "204 140 64",
     image: "/programs/physique-hypertrophy.png",
+    imageMobile: "/programs/physique-hypertrophy-mobile.png",
   },
   {
     slug: "competition-prep",
@@ -69,6 +77,7 @@ export const PROGRAMS: Program[] = [
     icon: Trophy,
     tint: "214 84 74",
     image: "/programs/competition-prep.png",
+    imageMobile: "/programs/competition-prep-mobile.png",
   },
   {
     slug: "online-remote-coaching",
@@ -84,5 +93,6 @@ export const PROGRAMS: Program[] = [
     icon: Wifi,
     tint: "74 184 150",
     image: "/programs/online-remote-coaching.png",
+    imageMobile: "/programs/online-remote-coaching-mobile.png",
   },
 ];

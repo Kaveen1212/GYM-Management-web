@@ -72,6 +72,7 @@ const config: Config = {
         wide: "1440px",
         // shared site container — nav + all content sections align to this
         "8xl": "100rem", // 1600px
+        "9xl": "110rem", // 1760px — wider container used by the nav
       },
       transitionTimingFunction: {
         expo: "cubic-bezier(0.16, 1, 0.3, 1)",

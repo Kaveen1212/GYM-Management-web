@@ -37,7 +37,7 @@ export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden border-t border-border bg-bg">
       {/* Final CTA band */}
-      <div className="mx-auto max-w-8xl px-6 pt-24 pb-16 sm:pt-32 lg:px-10">
+      <div className="mx-auto max-w-9xl px-5 pt-24 pb-16 sm:px-8 sm:pt-32 lg:px-0">
         <Reveal className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
           <div>
             <p className="eyebrow mb-5">Ready when you are</p>
@@ -68,7 +68,7 @@ export function SiteFooter() {
       </div>
 
       {/* Footer nav */}
-      <div className="mx-auto grid max-w-8xl grid-cols-2 gap-8 px-6 pb-20 sm:grid-cols-3 md:grid-cols-4 lg:px-10">
+      <div className="mx-auto grid max-w-9xl grid-cols-2 gap-8 px-5 pb-20 sm:grid-cols-3 sm:px-8 md:grid-cols-4 lg:px-0">
         <div className="col-span-2 sm:col-span-3 md:col-span-1">
           <div className="flex items-center gap-2.5">
             <span className="grid h-7 w-7 place-items-center rounded-md bg-accent text-accent-ink">
@@ -121,7 +121,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-8xl flex-col items-center justify-between gap-3 border-t border-border px-6 py-6 text-xs text-faint sm:flex-row lg:px-10">
+      <div className="mx-auto flex max-w-9xl flex-col items-center justify-between gap-3 border-t border-border px-5 py-6 text-xs text-faint sm:flex-row sm:px-8 lg:px-0">
         <p>© {2026} K_RIPSTER Performance. All rights reserved.</p>
         <p className="eyebrow">Train with intent</p>
       </div>

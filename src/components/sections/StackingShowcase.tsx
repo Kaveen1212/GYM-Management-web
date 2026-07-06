@@ -1,6 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { gsap } from "gsap";
@@ -9,6 +10,8 @@ import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { PROGRAMS, type Program } from "@/lib/programs";
 import { usePrefersReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { Reveal } from "@/components/motion/Reveal";
+import { useLenis } from "@/components/motion/SmoothScroll";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,11 +30,33 @@ export function StackingShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [pinned, setPinned] = useState(false);
+  const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
   const reduced = usePrefersReducedMotion();
+  const { lenis } = useLenis();
 
   // Pinned stacking runs on every screen size — only reduced-motion users get
   // the plain list fallback.
   const mode: "stack" | "list" = reduced ? "list" : "stack";
+
+  // The thumbnail rail portals into the nav's slot (top-right, beside the
+  // action buttons) instead of floating inside the stage — matches the
+  // reference's rail-in-the-nav placement. Only shown while pinned.
+  useEffect(() => {
+    setNavSlot(document.getElementById("nav-rail-slot"));
+  }, []);
+
+  // Each card transition consumes exactly one viewport height of scroll (see
+  // the ScrollTrigger below), so jumping to card `i` is just the section's
+  // top offset plus `i` viewport heights.
+  function jumpTo(i: number) {
+    const el = sectionRef.current;
+    if (!el) return;
+    const sectionTop = el.getBoundingClientRect().top + window.scrollY;
+    const target = sectionTop + i * window.innerHeight;
+    if (lenis) lenis.scrollTo(target, { duration: 1.2 });
+    else window.scrollTo({ top: target, behavior: "smooth" });
+  }
 
   useLayoutEffect(() => {
     if (mode !== "stack" || !sectionRef.current) return;
@@ -60,6 +85,7 @@ export function StackingShowcase() {
           scrub: 0.8,
           onUpdate: (self) =>
             setActive(Math.round(self.progress * (COUNT - 1))),
+          onToggle: (self) => setPinned(self.isActive),
         },
       });
 
@@ -131,6 +157,41 @@ export function StackingShowcase() {
         />
         <div className="absolute inset-0 z-0 bg-[radial-gradient(125%_100%_at_50%_50%,transparent_35%,rgba(0,0,0,0.7))]" />
 
+        {/* thumbnail rail — portals into the nav's slot (top-right, beside
+            the action buttons) while this section is pinned; click a
+            thumbnail to jump straight to that card */}
+        {pinned &&
+          navSlot &&
+          createPortal(
+            <div className="flex items-center gap-1.5 rounded-md border border-white/10 bg-surface/60 p-1.5 backdrop-blur-md">
+              {PROGRAMS.map((p, i) => (
+                <button
+                  key={p.slug}
+                  type="button"
+                  onClick={() => jumpTo(i)}
+                  data-cursor={p.name}
+                  aria-label={`Jump to ${p.name}`}
+                  aria-current={i === active}
+                  className={cn(
+                    "relative h-10 w-10 shrink-0 overflow-hidden rounded-md border transition-all duration-300 ease-expo",
+                    i === active
+                      ? "border-accent"
+                      : "border-white/15 opacity-55 hover:opacity-90"
+                  )}
+                >
+                  <Image
+                    src={p.imageMobile ?? p.image}
+                    alt=""
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>,
+            navSlot
+          )}
+
         {/* stacked cards — all present on screen from the start, fanned into a
             shallow deck; the front card (highest z-index) flies up and off on
             scroll, the next one (already waiting behind) scales up to replace it */}
@@ -140,7 +201,7 @@ export function StackingShowcase() {
             className="absolute inset-0 z-10 flex items-center justify-center px-[clamp(12px,4vw,56px)] pb-[clamp(12px,3vh,40px)] pt-[clamp(64px,11vh,128px)]"
             style={{ zIndex: 10 + (COUNT - i) }}
           >
-            <div className="stack-card relative h-[clamp(460px,82svh,700px)] w-full max-w-[1480px] overflow-hidden rounded-panel border border-border bg-surface shadow-raised">
+            <div className="stack-card relative h-[clamp(420px,68svh,600px)] w-full max-w-[1480px] overflow-hidden rounded-panel border border-border bg-surface shadow-raised">
               {/* mobile: stacked rows (headline / media / detail) — desktop: 3 columns */}
               <div className="grid h-full grid-rows-[auto_minmax(160px,1fr)_auto] lg:grid-rows-none lg:grid-cols-[0.85fr_1.75fr_0.8fr]">
                 {/* headline */}
@@ -157,12 +218,22 @@ export function StackingShowcase() {
                 {/* media (parallax) */}
                 <div className="relative overflow-hidden border-y border-border bg-[#0c0e10] lg:border-x lg:border-y-0">
                   <div className="stack-img absolute inset-0">
+                    {/* near-square crop on phones, wide letterbox crop on desktop —
+                        one photo can't frame well at both, so we swap the file */}
+                    <Image
+                      src={p.imageMobile ?? p.image}
+                      alt={p.name}
+                      fill
+                      sizes="100vw"
+                      className="object-cover lg:hidden"
+                      priority={i === 0}
+                    />
                     <Image
                       src={p.image}
                       alt={p.name}
                       fill
-                      sizes="(min-width: 1024px) 55vw, 100vw"
-                      className="object-cover"
+                      sizes="55vw"
+                      className="hidden object-cover lg:block"
                       priority={i === 0}
                     />
                     {/* tint wash + dark gradient — keeps every photo reading as one campaign */}
