@@ -15,7 +15,7 @@ export function NewsletterCTA() {
 
   return (
     <section className="border-t border-border bg-bg py-24 sm:py-28">
-      <div className="mx-auto max-w-8xl px-6 lg:px-10">
+      <div className="mx-auto max-w-9xl px-5 sm:px-8 lg:px-0">
         <Reveal className="grid gap-10 md:grid-cols-2 md:items-end">
           <div>
             <p className="eyebrow mb-5 text-accent">Stay in the loop</p>

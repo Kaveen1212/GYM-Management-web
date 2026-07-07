@@ -15,7 +15,7 @@ export function StatsStrip() {
     <section className="border-y border-border bg-surface/30">
       <Reveal
         stagger
-        className="mx-auto grid max-w-8xl grid-cols-2 gap-px overflow-hidden md:grid-cols-4"
+        className="mx-auto grid max-w-9xl grid-cols-2 gap-px overflow-hidden md:grid-cols-4"
       >
         {STATS.map((s) => (
           <RevealItem
